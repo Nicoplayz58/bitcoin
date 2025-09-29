@@ -1,0 +1,1741 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Prediccion de volatibilidad del BITCOIN usando series de tiempo &#8212; Prediccion de volatilidad del bitcoin</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'bitcoin_EDA';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Prediccion de volatilidad del bitcoin</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Prediccion de volatibilidad del BITCOIN usando series de tiempo
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/bitcoin_EDA.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Prediccion de volatibilidad del BITCOIN usando series de tiempo</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Prediccion de volatibilidad del BITCOIN usando series de tiempo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-clave-en-series-financieras">Conceptos clave en series financieras</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos">1. Retornos logarítmicos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventajas-de-los-retornos-logaritmicos">✅ Ventajas de los retornos logarítmicos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatilidad-historica">2. Volatilidad histórica</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eleccion-de-la-ventana">🔍 Elección de la ventana</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-descriptivo-inicial-de-btc">📊 Análisis descriptivo inicial de BTC</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precio-de-cierre-close">1. Precio de cierre (Close)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos-logreturn">2. Retornos logarítmicos (LogReturn)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatilidad-30d-anualizada">3. Volatilidad 30d anualizada</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis-general">📌 Síntesis general</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-graficos-exploratorios-de-btc">📊 Análisis de gráficos exploratorios de BTC</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serie-de-precios-close">1️⃣ Serie de precios (Close)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos-diarios">2️⃣ Retornos logarítmicos diarios</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#histograma-de-retornos-logaritmicos">3️⃣ Histograma de retornos logarítmicos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-de-retornos-logreturn">4️⃣ ACF de retornos (LogReturn)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-de-retornos2-heterocedasticidad">5️⃣ ACF de retornos² (heterocedasticidad)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">📌 Síntesis general</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="prediccion-de-volatibilidad-del-bitcoin-usando-series-de-tiempo">
+<h1>Prediccion de volatibilidad del BITCOIN usando series de tiempo<a class="headerlink" href="#prediccion-de-volatibilidad-del-bitcoin-usando-series-de-tiempo" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">btc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;btc_1d_data_2018_to_2025.csv&#39;</span><span class="p">)</span>
+<span class="n">btc</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Open time</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Volume</th>
+      <th>Close time</th>
+      <th>Quote asset volume</th>
+      <th>Number of trades</th>
+      <th>Taker buy base asset volume</th>
+      <th>Taker buy quote asset volume</th>
+      <th>Ignore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-01-01</td>
+      <td>13715.65</td>
+      <td>13818.55</td>
+      <td>12750.00</td>
+      <td>13380.00</td>
+      <td>8609.915844</td>
+      <td>2018-01-01 23:59:59.999</td>
+      <td>1.147997e+08</td>
+      <td>105595</td>
+      <td>3961.938946</td>
+      <td>5.280975e+07</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-01-02</td>
+      <td>13382.16</td>
+      <td>15473.49</td>
+      <td>12890.02</td>
+      <td>14675.11</td>
+      <td>20078.092111</td>
+      <td>2018-01-02 23:59:59.999</td>
+      <td>2.797171e+08</td>
+      <td>177728</td>
+      <td>11346.326739</td>
+      <td>1.580801e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-01-03</td>
+      <td>14690.00</td>
+      <td>15307.56</td>
+      <td>14150.00</td>
+      <td>14919.51</td>
+      <td>15905.667639</td>
+      <td>2018-01-03 23:59:59.999</td>
+      <td>2.361169e+08</td>
+      <td>162787</td>
+      <td>8994.953566</td>
+      <td>1.335873e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-01-04</td>
+      <td>14919.51</td>
+      <td>15280.00</td>
+      <td>13918.04</td>
+      <td>15059.54</td>
+      <td>21329.649574</td>
+      <td>2018-01-04 23:59:59.999</td>
+      <td>3.127816e+08</td>
+      <td>170310</td>
+      <td>12680.812951</td>
+      <td>1.861168e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-01-05</td>
+      <td>15059.56</td>
+      <td>17176.24</td>
+      <td>14600.00</td>
+      <td>16960.39</td>
+      <td>23251.491125</td>
+      <td>2018-01-05 23:59:59.999</td>
+      <td>3.693220e+08</td>
+      <td>192969</td>
+      <td>13346.622293</td>
+      <td>2.118299e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2589</th>
+      <td>2025-02-02</td>
+      <td>100635.66</td>
+      <td>101456.60</td>
+      <td>99747.59</td>
+      <td>99796.00</td>
+      <td>3149.622330</td>
+      <td>2025-02-02 23:59:59.999</td>
+      <td>3.167280e+08</td>
+      <td>558753</td>
+      <td>1223.084700</td>
+      <td>1.231618e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2590</th>
+      <td>2025-02-03</td>
+      <td>97700.59</td>
+      <td>97782.79</td>
+      <td>91231.00</td>
+      <td>94495.21</td>
+      <td>20992.955720</td>
+      <td>2025-02-03 23:59:59.999</td>
+      <td>1.983835e+09</td>
+      <td>2309956</td>
+      <td>9239.171560</td>
+      <td>8.738586e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2591</th>
+      <td>2025-02-04</td>
+      <td>101328.51</td>
+      <td>101660.94</td>
+      <td>100743.33</td>
+      <td>101367.77</td>
+      <td>1910.355420</td>
+      <td>2025-02-04 23:59:59.999</td>
+      <td>1.933988e+08</td>
+      <td>208849</td>
+      <td>822.417140</td>
+      <td>8.326802e+07</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2592</th>
+      <td>2025-02-05</td>
+      <td>97763.14</td>
+      <td>98930.44</td>
+      <td>97131.43</td>
+      <td>97589.30</td>
+      <td>8160.567950</td>
+      <td>2025-02-05 23:59:59.999</td>
+      <td>7.990502e+08</td>
+      <td>1597813</td>
+      <td>3672.410530</td>
+      <td>3.596230e+08</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2593</th>
+      <td>2025-02-06</td>
+      <td>96612.44</td>
+      <td>99120.00</td>
+      <td>96430.78</td>
+      <td>98329.13</td>
+      <td>8315.064450</td>
+      <td>2025-02-06 23:59:59.999</td>
+      <td>8.145593e+08</td>
+      <td>1471991</td>
+      <td>4089.626850</td>
+      <td>4.005688e+08</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2594 rows × 12 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">btc</span> <span class="o">=</span> <span class="n">btc</span><span class="p">[[</span><span class="s1">&#39;Close time&#39;</span><span class="p">,</span> <span class="s1">&#39;Close&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">btc</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Close time</th>
+      <th>Close</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2018-01-01 23:59:59.999</td>
+      <td>13380.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2018-01-02 23:59:59.999</td>
+      <td>14675.11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2018-01-03 23:59:59.999</td>
+      <td>14919.51</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2018-01-04 23:59:59.999</td>
+      <td>15059.54</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-01-05 23:59:59.999</td>
+      <td>16960.39</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2589</th>
+      <td>2025-02-02 23:59:59.999</td>
+      <td>99796.00</td>
+    </tr>
+    <tr>
+      <th>2590</th>
+      <td>2025-02-03 23:59:59.999</td>
+      <td>94495.21</td>
+    </tr>
+    <tr>
+      <th>2591</th>
+      <td>2025-02-04 23:59:59.999</td>
+      <td>101367.77</td>
+    </tr>
+    <tr>
+      <th>2592</th>
+      <td>2025-02-05 23:59:59.999</td>
+      <td>97589.30</td>
+    </tr>
+    <tr>
+      <th>2593</th>
+      <td>2025-02-06 23:59:59.999</td>
+      <td>98329.13</td>
+    </tr>
+  </tbody>
+</table>
+<p>2594 rows × 2 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">btc</span> <span class="o">=</span> <span class="n">btc</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Close time&quot;</span><span class="p">:</span> <span class="s2">&quot;Date&quot;</span><span class="p">})</span>
+<span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">])</span>
+<span class="n">btc</span> <span class="o">=</span> <span class="n">btc</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="conceptos-clave-en-series-financieras">
+<h1>Conceptos clave en series financieras<a class="headerlink" href="#conceptos-clave-en-series-financieras" title="Link to this heading">#</a></h1>
+<section id="retornos-logaritmicos">
+<h2>1. Retornos logarítmicos<a class="headerlink" href="#retornos-logaritmicos" title="Link to this heading">#</a></h2>
+<p>En lugar de trabajar directamente con los precios, en finanzas se utilizan <strong>retornos</strong> para medir las variaciones de un activo.<br />
+Existen dos formas principales:</p>
+<ul class="simple">
+<li><p><strong>Retorno simple:</strong></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+r_t = \frac{P_t - P_{t-1}}{P_{t-1}} = \frac{P_t}{P_{t-1}} - 1
+\]</div>
+<ul class="simple">
+<li><p><strong>Retorno logarítmico:</strong></p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+r_t = \ln \left( \frac{P_t}{P_{t-1}} \right)
+\]</div>
+<section id="ventajas-de-los-retornos-logaritmicos">
+<h3>✅ Ventajas de los retornos logarítmicos<a class="headerlink" href="#ventajas-de-los-retornos-logaritmicos" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Aditividad en el tiempo</strong>: los retornos logarítmicos se pueden sumar para obtener el retorno total de varios períodos:</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[
+r_{total} = \ln\left(\frac{P_t}{P_0}\right) = \sum_{i=1}^t r_i
+\]</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>Simetría</strong>: corrige la asimetría que aparece con los retornos simples (ej. +10% seguido de -10%).</p></li>
+<li><p><strong>Mejor ajuste estadístico</strong>: suelen aproximarse mejor a distribuciones normales.</p></li>
+<li><p><strong>Escalabilidad</strong>: funcionan igual para datos diarios, semanales o mensuales.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="volatilidad-historica">
+<h2>2. Volatilidad histórica<a class="headerlink" href="#volatilidad-historica" title="Link to this heading">#</a></h2>
+<p>La <strong>volatilidad</strong> mide la dispersión de los retornos en un período de tiempo.<br />
+Se calcula como la desviación estándar de los retornos logarítmicos en una ventana de tamaño ( n ):</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_t = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (r_{t-i} - \bar{r})^2}
+\]</div>
+<p>donde:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(r_{t-i}\)</span> → retorno logarítmico del día <span class="math notranslate nohighlight">\(t-i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( \bar{r} \)</span> → media de los retornos en la ventana</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> → número de días en la ventana</p></li>
+</ul>
+<p>Para comparabilidad se suele <strong>anualizar</strong> la volatilidad multiplicando por la raíz del número de períodos en un año:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_{anual} = \sigma_{ventana} \cdot \sqrt{252}
+\]</div>
+<p>(252 ≈ número de días de trading al año).</p>
+<hr class="docutils" />
+<section id="eleccion-de-la-ventana">
+<h3>🔍 Elección de la ventana<a class="headerlink" href="#eleccion-de-la-ventana" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Ventanas cortas (7–14 días):</strong> capturan cambios recientes, muy sensibles al ruido.</p></li>
+<li><p><strong>Ventanas medianas (21–30 días):</strong> equilibrio entre sensibilidad y estabilidad.</p></li>
+<li><p><strong>Ventanas largas (60–90+ días):</strong> suavizan mucho las fluctuaciones, útiles para tendencias de largo plazo.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Retornos logarítmicos</span>
+<span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Volatilidad histórica (rolling std * sqrt(365)), ventana de 30 días</span>
+<span class="n">WINDOW_VOL</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Volatility_30d&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">WINDOW_VOL</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ver si hay valores nulos en el DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">btc</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="c1"># O ver el total de nulos</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total de nulos en todo el dataset:&quot;</span><span class="p">,</span> <span class="n">btc</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date               0
+Close              0
+LogReturn          1
+Volatility_30d    30
+dtype: int64
+
+Total de nulos en todo el dataset: 31
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Descriptivas: Precio (Close) ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Descriptivas: Retornos log (LogReturn) ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Descriptivas: Volatilidad 30d anualizada ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Volatility_30d&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Descriptivas: Precio (Close) ===
+count      2594.000000
+mean      29090.193446
+std       23576.229505
+min        3211.720000
+25%        9068.840000
+50%       22741.115000
+75%       43527.390000
+max      106143.820000
+Name: Close, dtype: float64
+
+=== Descriptivas: Retornos log (LogReturn) ===
+count    2593.000000
+mean        0.000769
+std         0.036221
+min        -0.502607
+25%        -0.014171
+50%         0.000708
+75%         0.016304
+max         0.178449
+Name: LogReturn, dtype: float64
+
+=== Descriptivas: Volatilidad 30d anualizada ===
+count    2564.000000
+mean        0.630397
+std         0.268976
+min         0.167561
+25%         0.464059
+50%         0.580054
+75%         0.740492
+max         2.117772
+Name: Volatility_30d, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="analisis-descriptivo-inicial-de-btc">
+<h1>📊 Análisis descriptivo inicial de BTC<a class="headerlink" href="#analisis-descriptivo-inicial-de-btc" title="Link to this heading">#</a></h1>
+<section id="precio-de-cierre-close">
+<h2>1. Precio de cierre (Close)<a class="headerlink" href="#precio-de-cierre-close" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Media ≈ 29,090 USD</strong> → precio promedio en todo el período (2018–2025).</p></li>
+<li><p><strong>Desviación estándar ≈ 23,576 USD</strong> → los precios muestran una alta dispersión, típico de un activo riesgoso como BTC.</p></li>
+<li><p><strong>Mínimo ≈ 3,211 USD</strong> → corresponde al piso histórico en 2018–2019.</p></li>
+<li><p><strong>Máximo ≈ 106,143 USD</strong> → refleja los picos de mercado de 2021 y 2024–2025.</p></li>
+<li><p><strong>Mediana ≈ 22,741 USD</strong>, menor a la media → la distribución está sesgada por los valores muy altos.</p></li>
+</ul>
+<p>➡️ <strong>Conclusión:</strong> el precio de BTC <strong>no es estable</strong>, presenta ciclos de subidas y caídas abruptas.</p>
+</section>
+<hr class="docutils" />
+<section id="retornos-logaritmicos-logreturn">
+<h2>2. Retornos logarítmicos (LogReturn)<a class="headerlink" href="#retornos-logaritmicos-logreturn" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Media ≈ 0.00077 (~0.077%)</strong> → retornos diarios tienden a cero, como es habitual en activos financieros.</p></li>
+<li><p><strong>Desviación estándar ≈ 0.036 (3.6%)</strong> → en promedio, BTC se mueve entre 3–4% al día.</p></li>
+<li><p><strong>Mínimo ≈ –0.50 (–50%)</strong> y <strong>máximo ≈ +0.18 (+18%)</strong> → se observan eventos extremos (crashes y rallies).</p></li>
+<li><p><strong>Mediana ≈ 0.0007</strong> → la mayoría de días presentan movimientos pequeños, aunque las colas pesadas dominan la volatilidad.</p></li>
+</ul>
+<p>➡️ <strong>Conclusión:</strong> los retornos están <strong>centrados en 0</strong> pero muestran colas pesadas, evidencia de <strong>alta volatilidad y no-normalidad</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="volatilidad-30d-anualizada">
+<h2>3. Volatilidad 30d anualizada<a class="headerlink" href="#volatilidad-30d-anualizada" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Media ≈ 0.63 (63%)</strong> → BTC tuvo en promedio una volatilidad anual del 63%, muy superior a activos tradicionales (bolsa ≈ 15–20%).</p></li>
+<li><p><strong>Desviación estándar ≈ 0.27</strong> → la volatilidad misma cambia bastante en el tiempo.</p></li>
+<li><p><strong>Mínimo ≈ 0.16 (16%)</strong>, <strong>máximo ≈ 2.11 (211%)</strong> → en momentos extremos, la volatilidad anualizada superó el 200%.</p></li>
+<li><p><strong>Mediana ≈ 0.58 (58%)</strong> → más representativa de la “normalidad” que la media.</p></li>
+</ul>
+<p>➡️ <strong>Conclusión:</strong> BTC es un activo <strong>ultra-volátil</strong>, con períodos relativamente tranquilos pero también fases de riesgo extremo.</p>
+</section>
+<hr class="docutils" />
+<section id="sintesis-general">
+<h2>📌 Síntesis general<a class="headerlink" href="#sintesis-general" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>El precio de BTC muestra una <strong>tendencia creciente con ciclos de burbujas</strong>.</p></li>
+<li><p>Los retornos están centrados en 0, pero tienen <strong>colas pesadas y distribuciones no normales</strong>.</p></li>
+<li><p>La volatilidad es <strong>estructuralmente alta y variable en el tiempo</strong>, confirmando la <strong>heterocedasticidad</strong>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualizacion</span>
+<span class="c1"># (a) Serie temporal de precios</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;BTC-USD: Serie de precios (Close)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Precio de cierre (USD)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/128eecfa8c7d37f27729f531cfc3c9c7676f00193df617ed5ab45251804b592e.png" src="_images/128eecfa8c7d37f27729f531cfc3c9c7676f00193df617ed5ab45251804b592e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># (b) Serie de retornos logarítmicos</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;BTC-USD: Retornos logarítmicos diarios&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fecha&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ba5b85fb7d41d83552e9376ab2a3fd40863d4ae8bd5a5974bb0f7ca5877d3c86.png" src="_images/ba5b85fb7d41d83552e9376ab2a3fd40863d4ae8bd5a5974bb0f7ca5877d3c86.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># (c) Histograma de retornos</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Histograma de retornos logarítmicos&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frecuencia&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/03ff00ac4af570f741b45fccdf1228133f3c5f6b53a63fe877302f6442a9f77b.png" src="_images/03ff00ac4af570f741b45fccdf1228133f3c5f6b53a63fe877302f6442a9f77b.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Asegurar que no haya NaN</span>
+<span class="n">log_ret</span> <span class="o">=</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;LogReturn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># (d) ACF de retornos</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">log_ret</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ACF de retornos (LogReturn)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># (e) ACF de retornos^2 (heterocedasticidad)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">log_ret</span><span class="p">),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ACF de retornos^2 (detección de heterocedasticidad)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 800x400 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/0626cc33e8a5c0b63a328eb799c700e05ed5ac6e81356b5c15d4b2dd28b2adab.png" src="_images/0626cc33e8a5c0b63a328eb799c700e05ed5ac6e81356b5c15d4b2dd28b2adab.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 800x400 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/87c6d5e0ad47f93a9327ebe6448b3274fe560c2de4235aaf673e990275838677.png" src="_images/87c6d5e0ad47f93a9327ebe6448b3274fe560c2de4235aaf673e990275838677.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="analisis-de-graficos-exploratorios-de-btc">
+<h1>📊 Análisis de gráficos exploratorios de BTC<a class="headerlink" href="#analisis-de-graficos-exploratorios-de-btc" title="Link to this heading">#</a></h1>
+<section id="serie-de-precios-close">
+<h2>1️⃣ Serie de precios (Close)<a class="headerlink" href="#serie-de-precios-close" title="Link to this heading">#</a></h2>
+<p><strong>Qué muestra:</strong> evolución del precio de BTC entre 2018 y 2025.</p>
+<ul class="simple">
+<li><p>Se observan <strong>picos pronunciados</strong> en 2021 y 2024, seguidos de caídas.</p></li>
+<li><p>El precio pasó de valores cercanos a <strong>3,000 USD</strong> en 2018 hasta superar los <strong>100,000 USD</strong> en 2025.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> BTC es un activo con tendencia creciente pero con <strong>ciclos de burbuja y colapso muy claros</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="retornos-logaritmicos-diarios">
+<h2>2️⃣ Retornos logarítmicos diarios<a class="headerlink" href="#retornos-logaritmicos-diarios" title="Link to this heading">#</a></h2>
+<p><strong>Qué muestra:</strong> variación diaria del precio.</p>
+<ul class="simple">
+<li><p>La mayoría de retornos están cercanos a <strong>0</strong>.</p></li>
+<li><p>Aparecen <strong>picos extremos negativos</strong> (caídas bruscas) y algunos positivos (rallies).</p></li>
+<li><p>Ejemplo: en 2020 se observa un crash fuerte (posiblemente el efecto del COVID en marzo).</p></li>
+</ul>
+<p><strong>Conclusión:</strong> retornos con distribución centrada en cero pero con <strong>eventos extremos (colas pesadas)</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="histograma-de-retornos-logaritmicos">
+<h2>3️⃣ Histograma de retornos logarítmicos<a class="headerlink" href="#histograma-de-retornos-logaritmicos" title="Link to this heading">#</a></h2>
+<p><strong>Qué muestra:</strong> distribución de los retornos diarios.</p>
+<ul class="simple">
+<li><p>La mayoría de días presentan cambios entre <strong>–5% y +5%</strong>.</p></li>
+<li><p>La forma es <strong>campana centrada en 0</strong>, pero más “picuda” y con colas más largas que una normal.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> los retornos <strong>no siguen una normal perfecta</strong>, sino que tienen <strong>kurtosis alta</strong> (más probabilidad de eventos extremos).</p>
+</section>
+<hr class="docutils" />
+<section id="acf-de-retornos-logreturn">
+<h2>4️⃣ ACF de retornos (LogReturn)<a class="headerlink" href="#acf-de-retornos-logreturn" title="Link to this heading">#</a></h2>
+<p><strong>Qué muestra:</strong> autocorrelación de los retornos hasta 60 rezagos (≈ 2 meses).</p>
+<ul class="simple">
+<li><p>Casi todas las barras están <strong>dentro de las bandas azules</strong>.</p></li>
+<li><p>No hay dependencia lineal significativa entre retornos pasados y futuros.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> los retornos se comportan como <strong>ruido blanco</strong>, consistente con la hipótesis de <strong>mercados eficientes</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="acf-de-retornos2-heterocedasticidad">
+<h2>5️⃣ ACF de retornos² (heterocedasticidad)<a class="headerlink" href="#acf-de-retornos2-heterocedasticidad" title="Link to this heading">#</a></h2>
+<p><strong>Qué muestra:</strong> autocorrelación de los retornos al cuadrado (proxy de la volatilidad).</p>
+<ul class="simple">
+<li><p>Varias barras <strong>sobresalen al inicio</strong>, lo que indica dependencia en la varianza.</p></li>
+<li><p>Esto significa que la volatilidad tiende a <strong>agruparse en clusters</strong>: periodos de alta volatilidad seguidos de alta, y baja seguidos de baja.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> existe <strong>heterocedasticidad</strong> → justifica el uso de modelos como <strong>ARCH/GARCH</strong> o <strong>MLP con features de volatilidad</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="id1">
+<h2>📌 Síntesis general<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>El precio de BTC muestra <strong>ciclos de burbujas y crashes</strong>.</p></li>
+<li><p>Los retornos están centrados en 0 pero con <strong>colas pesadas y no-normalidad</strong>.</p></li>
+<li><p>No hay autocorrelación en retornos → <strong>ruido blanco</strong>.</p></li>
+<li><p>Sí hay autocorrelación en retornos² → <strong>clustering de volatilidad</strong>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupKFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neural_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPRegressor</span>
+
+<span class="c1"># BDS: intentamos statsmodels; si no, arch</span>
+<span class="n">_BDS_BACKEND</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">bds</span> <span class="k">as</span> <span class="n">bds_sm</span>
+    <span class="n">_BDS_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;statsmodels&quot;</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">arch.bootstrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">bds</span> <span class="k">as</span> <span class="n">bds_arch</span>
+        <span class="n">_BDS_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;arch&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">_BDS_BACKEND</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Intentar usar tsxv/timeseries-cv (como exige el enunciado)</span>
+<span class="n">_TSX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tsxv</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_train_val_test_groupKFold</span> <span class="k">as</span> <span class="n">_split_tsxv</span>  <span class="c1"># pip install tsxv</span>
+    <span class="n">_TSX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">timeseries_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_train_val_test_groupKFold</span> <span class="k">as</span> <span class="n">_split_tsxv</span>  <span class="c1"># pip install timeseries-cv</span>
+        <span class="n">_TSX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">_TSX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Rutas de salida</span>
+<span class="n">FIGS_DIR</span> <span class="o">=</span> <span class="s2">&quot;notebooks/figs&quot;</span>
+<span class="n">RESULTS_DIR</span> <span class="o">=</span> <span class="s2">&quot;results&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">FIGS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">RESULTS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Retornos log</span>
+<span class="n">btc</span><span class="p">[</span><span class="s2">&quot;log_return&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Limpia NaN inicial</span>
+<span class="n">btc</span> <span class="o">=</span> <span class="n">btc</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">dates_full</span> <span class="o">=</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">close_full</span> <span class="o">=</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">ret_full</span>   <span class="o">=</span> <span class="n">btc</span><span class="p">[</span><span class="s2">&quot;log_return&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># usaremos |ret| como proxy de volatilidad realizada</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_supervised_from_close_for_volatility</span><span class="p">(</span><span class="n">close</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                               <span class="n">log_returns</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                               <span class="n">dates</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+                                               <span class="n">n_steps_input</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                               <span class="n">n_steps_forecast</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                               <span class="n">n_steps_jump</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Features X: últimos &#39;n_steps_input&#39; CIERRES (Close).</span>
+<span class="sd">    Target Y:  |retornos log| de los próximos &#39;n_steps_forecast&#39; días (proxy de volatilidad realizada).</span>
+<span class="sd">    Devuelve: X (N, n_steps_input), Y (N, n_steps_forecast), dates_samples (N,)</span>
+<span class="sd">    El i-ésimo ejemplo usa close[t-n_steps_input+1 : t+1] y predice |r_{t+1 : t+n_steps_forecast}|.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">close</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">log_returns</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+    <span class="n">X_list</span><span class="p">,</span> <span class="n">Y_list</span><span class="p">,</span> <span class="n">D_list</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">close</span><span class="p">)</span>
+
+    <span class="c1"># El último índice de input es t; el último índice de target es t + n_steps_forecast</span>
+    <span class="c1"># Nos aseguramos de no pasarnos del final.</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_input</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">-</span> <span class="n">n_steps_forecast</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_steps_jump</span><span class="p">):</span>
+        <span class="c1"># ventana de input (closes)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">close</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="n">n_steps_input</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># futuros retornos (abs para proxy de volatilidad realizada)</span>
+        <span class="n">future_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">log_returns</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_steps_forecast</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_steps_input</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">future_r</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_steps_forecast</span><span class="p">:</span>
+            <span class="n">X_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">Y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">future_r</span><span class="p">)</span>
+            <span class="n">D_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dates</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>  <span class="c1"># fecha asociada al final del input</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_list</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y_list</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">D_list</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">D</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_time_groups</span><span class="p">(</span><span class="n">dates</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;W&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Agrupa muestras por periodo temporal (semana por defecto) para usar en GroupKFold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">period</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">to_period</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">codes</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fallback_split_train_val_test_groupKFold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">val_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">freq_groups</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fallback simple: GroupKFold por bloques temporales.</span>
+<span class="sd">    En cada fold, el &#39;holdout&#39; (grupos no vistos) se divide cronológicamente en val/test (50/50 por defecto).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">make_time_groups</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq_groups</span><span class="p">)</span>
+    <span class="n">gkf</span> <span class="o">=</span> <span class="n">GroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">)</span>
+
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tr_idx</span><span class="p">,</span> <span class="n">ho_idx</span> <span class="ow">in</span> <span class="n">gkf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">):</span>
+        <span class="n">tr_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">tr_idx</span><span class="p">)</span>
+        <span class="n">ho_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ho_idx</span><span class="p">)</span>
+
+        <span class="c1"># Orden cronológico dentro del holdout</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dates</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">ho_idx</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">ho_ord</span> <span class="o">=</span> <span class="n">ho_idx</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+        <span class="n">n_hold</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ho_ord</span><span class="p">)</span>
+        <span class="n">n_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">val_size</span> <span class="o">*</span> <span class="n">n_hold</span><span class="p">)),</span> <span class="n">n_hold</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">va_idx</span> <span class="o">=</span> <span class="n">ho_ord</span><span class="p">[:</span><span class="n">n_val</span><span class="p">]</span>
+        <span class="n">te_idx</span> <span class="o">=</span> <span class="n">ho_ord</span><span class="p">[</span><span class="n">n_val</span><span class="p">:]</span>
+
+        <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;train_idx&quot;</span><span class="p">:</span> <span class="n">tr_idx</span><span class="p">,</span> <span class="s2">&quot;val_idx&quot;</span><span class="p">:</span> <span class="n">va_idx</span><span class="p">,</span> <span class="s2">&quot;test_idx&quot;</span><span class="p">:</span> <span class="n">te_idx</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">splits</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">split_train_val_test_groupKFold_wrapper</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">val_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">freq_groups</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Usa la función oficial si está disponible; si no, usa el fallback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">_TSX_AVAILABLE</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="n">make_time_groups</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq_groups</span><span class="p">)</span>
+            <span class="c1"># algunas variantes aceptan val_size y shuffle=False</span>
+            <span class="k">return</span> <span class="n">_split_tsxv</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="n">n_splits</span><span class="p">,</span> <span class="n">val_size</span><span class="o">=</span><span class="n">val_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c1"># si la firma difiere, caemos al fallback</span>
+            <span class="k">return</span> <span class="n">_fallback_split_train_val_test_groupKFold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">,</span> <span class="n">val_size</span><span class="p">,</span> <span class="n">freq_groups</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_fallback_split_train_val_test_groupKFold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">n_splits</span><span class="p">,</span> <span class="n">val_size</span><span class="p">,</span> <span class="n">freq_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">safe_mape</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_true</span><span class="p">),</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">denom</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># por horizonte</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>            <span class="c1"># por horizonte</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mse</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>               <span class="c1"># por horizonte</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rmse</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>                        <span class="c1"># por horizonte</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bds_pvalue</span><span class="p">(</span><span class="n">residuals_h1</span><span class="p">,</span> <span class="n">max_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Devuelve p-value del BDS sobre los residuos del horizonte 1.</span>
+<span class="sd">    - Limpia NaN/Inf</span>
+<span class="sd">    - Estandariza (z-score) para estabilidad numérica</span>
+<span class="sd">    - Verifica longitud mínima y varianza &gt; 0</span>
+<span class="sd">    - Soporta statsmodels o arch, según disponibilidad</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">residuals_h1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>  <span class="c1"># quita NaN/Inf</span>
+
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">min_len</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># muy corto: mejor reportar nan que un valor engañoso</span>
+
+    <span class="c1"># Estandarizar</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sd</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">sd</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="n">sd</span>
+
+    <span class="c1"># Llamar al backend disponible</span>
+    <span class="k">if</span> <span class="n">_BDS_BACKEND</span> <span class="o">==</span> <span class="s2">&quot;statsmodels&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">bds_sm</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">max_dim</span><span class="o">=</span><span class="n">max_dim</span><span class="p">)</span>   <span class="c1"># -&gt; BdsTestResult</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;pvalue&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="k">elif</span> <span class="n">_BDS_BACKEND</span> <span class="o">==</span> <span class="s2">&quot;arch&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">bds_arch</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">max_dim</span><span class="o">=</span><span class="n">max_dim</span><span class="p">)</span>  <span class="c1"># -&gt; DataFrame con filas por dimensión</span>
+            <span class="c1"># Buscar la columna de p-value compatible</span>
+            <span class="n">pv_col</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;p&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">pv_col</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span> <span class="k">break</span>
+            <span class="k">if</span> <span class="n">pv_col</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="c1"># p-value para dimensión 2 (fila con índice 2 o posición 1)</span>
+            <span class="k">if</span> <span class="mi">2</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="n">pv_col</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">pv_col</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>statsmodels<span class="w">        </span>#<span class="w"> </span>recomendado
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: statsmodels in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (0.14.5)
+Requirement already satisfied: numpy&lt;3,&gt;=1.22.3 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from statsmodels) (2.3.2)
+Requirement already satisfied: scipy!=1.9.2,&gt;=1.8 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from statsmodels) (1.16.1)
+Requirement already satisfied: pandas!=2.1.0,&gt;=1.4 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from statsmodels) (2.3.2)
+Requirement already satisfied: patsy&gt;=0.5.6 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from statsmodels) (1.0.1)
+Requirement already satisfied: packaging&gt;=21.3 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from statsmodels) (25.0)
+Requirement already satisfied: python-dateutil&gt;=2.8.2 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from pandas!=2.1.0,&gt;=1.4-&gt;statsmodels) (2.9.0.post0)
+Requirement already satisfied: pytz&gt;=2020.1 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from pandas!=2.1.0,&gt;=1.4-&gt;statsmodels) (2025.2)
+Requirement already satisfied: tzdata&gt;=2022.7 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from pandas!=2.1.0,&gt;=1.4-&gt;statsmodels) (2025.2)
+Requirement already satisfied: six&gt;=1.5 in /opt/anaconda3/envs/jbook/lib/python3.11/site-packages (from python-dateutil&gt;=2.8.2-&gt;pandas!=2.1.0,&gt;=1.4-&gt;statsmodels) (1.17.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ===== Sección 5 (robusta): Lags → CV → MLP → Métricas → (opcional) Guardado =====</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Flags para controlar guardado</span>
+<span class="n">SAVE_ARTIFACTS</span> <span class="o">=</span> <span class="kc">True</span>   <span class="c1"># pon False si NO quieres guardar CSV/PNGs</span>
+<span class="n">FIGS_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;notebooks/figs&quot;</span><span class="p">)</span>
+<span class="n">RESULTS_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+
+<span class="c1"># Crear carpetas si se va a guardar</span>
+<span class="k">if</span> <span class="n">SAVE_ARTIFACTS</span><span class="p">:</span>
+    <span class="n">FIGS_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">RESULTS_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">lags_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">]</span>
+<span class="n">n_steps_forecast</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">n_steps_jump</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">results_by_L</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">metrics_rows_master</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_safe_savefig</span><span class="p">(</span><span class="n">path_obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guardar figura sin romper si falla y cerrar.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">path_obj</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARN] No se pudo guardar figura en </span><span class="si">{</span><span class="n">path_obj</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_safe_to_csv</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">path_obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Guardar CSV sin romper si falla.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_obj</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARN] No se pudo guardar CSV en </span><span class="si">{</span><span class="n">path_obj</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">lags_list</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===== Usando </span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2"> lags del precio → predecir |ret| futuros (h=1..7) =====&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 1) Dataset supervisado</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">build_supervised_from_close_for_volatility</span><span class="p">(</span>
+        <span class="n">close</span><span class="o">=</span><span class="n">close_full</span><span class="p">,</span> <span class="n">log_returns</span><span class="o">=</span><span class="n">ret_full</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="n">dates_full</span><span class="p">,</span>
+        <span class="n">n_steps_input</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">n_steps_forecast</span><span class="o">=</span><span class="n">n_steps_forecast</span><span class="p">,</span> <span class="n">n_steps_jump</span><span class="o">=</span><span class="n">n_steps_jump</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapes -&gt; X: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Y: </span><span class="si">{</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, D: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 2) Splits temporales</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="n">split_train_val_test_groupKFold_wrapper</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="n">D</span><span class="p">,</span> <span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">val_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">freq_groups</span><span class="o">=</span><span class="s2">&quot;W&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folds: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">fold_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rmse_folds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bds_pvals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_test_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_pred_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splits</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">tr</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">sp</span><span class="p">[</span><span class="s2">&quot;train_idx&quot;</span><span class="p">],</span> <span class="n">sp</span><span class="p">[</span><span class="s2">&quot;val_idx&quot;</span><span class="p">],</span> <span class="n">sp</span><span class="p">[</span><span class="s2">&quot;test_idx&quot;</span><span class="p">]</span>
+        <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_va</span><span class="p">,</span> <span class="n">X_te</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">tr</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">va</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">te</span><span class="p">]</span>
+        <span class="n">Y_tr</span><span class="p">,</span> <span class="n">Y_va</span><span class="p">,</span> <span class="n">Y_te</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">tr</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">va</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">te</span><span class="p">]</span>
+
+        <span class="c1"># Escalado sin leakage</span>
+        <span class="n">sx</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr</span><span class="p">)</span>
+        <span class="n">sy</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Y_tr</span><span class="p">)</span>
+        <span class="n">X_tr_s</span><span class="p">,</span> <span class="n">X_va_s</span><span class="p">,</span> <span class="n">X_te_s</span> <span class="o">=</span> <span class="n">sx</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_tr</span><span class="p">),</span> <span class="n">sx</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_va</span><span class="p">),</span> <span class="n">sx</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_te</span><span class="p">)</span>
+        <span class="n">Y_tr_s</span><span class="p">,</span> <span class="n">Y_va_s</span><span class="p">,</span> <span class="n">Y_te_s</span> <span class="o">=</span> <span class="n">sy</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_tr</span><span class="p">),</span> <span class="n">sy</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_va</span><span class="p">),</span> <span class="n">sy</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_te</span><span class="p">)</span>
+
+        <span class="c1"># Modelo</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MLPRegressor</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+                             <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span> <span class="o">+</span> <span class="n">k</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_tr_s</span><span class="p">,</span> <span class="n">Y_tr_s</span><span class="p">)</span>
+
+        <span class="c1"># Predicciones TEST (des-escala)</span>
+        <span class="n">Yhat_te_s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_te_s</span><span class="p">)</span>
+        <span class="n">Yhat_te</span> <span class="o">=</span> <span class="n">sy</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Yhat_te_s</span><span class="p">)</span>
+        <span class="n">Y_te_real</span> <span class="o">=</span> <span class="n">Y_te</span>
+
+        <span class="c1"># Métricas por horizonte y promedios</span>
+        <span class="n">mape_h</span> <span class="o">=</span> <span class="n">safe_mape</span><span class="p">(</span><span class="n">Y_te_real</span><span class="p">,</span> <span class="n">Yhat_te</span><span class="p">)</span>
+        <span class="n">mae_h</span>  <span class="o">=</span> <span class="n">mae</span><span class="p">(</span><span class="n">Y_te_real</span><span class="p">,</span> <span class="n">Yhat_te</span><span class="p">)</span>
+        <span class="n">mse_h</span>  <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">Y_te_real</span><span class="p">,</span> <span class="n">Yhat_te</span><span class="p">)</span>
+        <span class="n">rmse_h</span> <span class="o">=</span> <span class="n">rmse</span><span class="p">(</span><span class="n">Y_te_real</span><span class="p">,</span> <span class="n">Yhat_te</span><span class="p">)</span>
+
+        <span class="n">mape_avg</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mape_h</span><span class="p">))</span>
+        <span class="n">mae_avg</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mae_h</span><span class="p">))</span>
+        <span class="n">mse_avg</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mse_h</span><span class="p">))</span>
+        <span class="n">rmse_avg</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rmse_h</span><span class="p">))</span>
+
+        <span class="c1"># BDS en h1</span>
+        <span class="n">resid_h1</span> <span class="o">=</span> <span class="n">Y_te_real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">Yhat_te</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">bds_p</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">get_bds_pvalue</span><span class="p">(</span><span class="n">resid_h1</span><span class="p">))</span>
+
+        <span class="n">fold_row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">L</span><span class="p">,</span> <span class="s2">&quot;fold&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;MAPE_h</span><span class="si">{</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">mape_h</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_forecast</span><span class="p">)},</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;MAE_h</span><span class="si">{</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span>  <span class="n">mae_h</span><span class="p">[</span><span class="n">h</span><span class="p">]</span>  <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_forecast</span><span class="p">)},</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;MSE_h</span><span class="si">{</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span>  <span class="n">mse_h</span><span class="p">[</span><span class="n">h</span><span class="p">]</span>  <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_forecast</span><span class="p">)},</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;RMSE_h</span><span class="si">{</span><span class="n">h</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">rmse_h</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps_forecast</span><span class="p">)},</span>
+            <span class="s2">&quot;MAPE_avg&quot;</span><span class="p">:</span> <span class="n">mape_avg</span><span class="p">,</span> <span class="s2">&quot;MAE_avg&quot;</span><span class="p">:</span> <span class="n">mae_avg</span><span class="p">,</span> <span class="s2">&quot;MSE_avg&quot;</span><span class="p">:</span> <span class="n">mse_avg</span><span class="p">,</span> <span class="s2">&quot;RMSE_avg&quot;</span><span class="p">:</span> <span class="n">rmse_avg</span><span class="p">,</span>
+            <span class="s2">&quot;BDS_pvalue_h1&quot;</span><span class="p">:</span> <span class="n">bds_p</span>
+        <span class="p">}</span>
+        <span class="n">fold_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_row</span><span class="p">)</span>
+        <span class="n">rmse_folds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rmse_avg</span><span class="p">)</span>
+        <span class="n">bds_pvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bds_p</span><span class="p">)</span>
+
+        <span class="n">y_test_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Y_te_real</span><span class="p">)</span>
+        <span class="n">y_pred_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Yhat_te</span><span class="p">)</span>
+
+    <span class="c1"># DataFrame por L</span>
+    <span class="n">df_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fold_metrics</span><span class="p">)</span>
+
+    <span class="c1"># Guardar CSV por L (si aplica)</span>
+    <span class="k">if</span> <span class="n">SAVE_ARTIFACTS</span><span class="p">:</span>
+        <span class="n">_safe_to_csv</span><span class="p">(</span><span class="n">df_metrics</span><span class="p">,</span> <span class="n">RESULTS_DIR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;metrics_test_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Gráficas por L (si aplica)</span>
+    <span class="k">if</span> <span class="n">SAVE_ARTIFACTS</span><span class="p">:</span>
+        <span class="c1"># RMSE por fold</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mf">3.5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rmse_folds</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">rmse_folds</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMSE promedio (7-step) TEST por fold — L=</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Fold&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;RMSE promedio&quot;</span><span class="p">)</span>
+        <span class="n">_safe_savefig</span><span class="p">(</span><span class="n">FIGS_DIR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;rmse_folds_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span>
+
+        <span class="c1"># RMSE medio por horizonte</span>
+        <span class="n">rmse_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_metrics</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;RMSE_h&quot;</span><span class="p">)]</span>
+        <span class="n">rmse_h_mean</span> <span class="o">=</span> <span class="n">df_metrics</span><span class="p">[</span><span class="n">rmse_cols</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mf">3.5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps_forecast</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">rmse_h_mean</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMSE medio por horizonte (TEST) — L=</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Horizonte (días)&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;RMSE&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps_forecast</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">_safe_savefig</span><span class="p">(</span><span class="n">FIGS_DIR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;rmse_hmean_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Almacenar en memoria para diagnóstico/tabla maestra</span>
+    <span class="n">results_by_L</span><span class="p">[</span><span class="n">L</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;df_metrics&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">,</span>
+        <span class="s2">&quot;rmse_folds&quot;</span><span class="p">:</span> <span class="n">rmse_folds</span><span class="p">,</span>
+        <span class="s2">&quot;bds_pvals&quot;</span><span class="p">:</span> <span class="n">bds_pvals</span><span class="p">,</span>
+        <span class="s2">&quot;y_test_list&quot;</span><span class="p">:</span> <span class="n">y_test_list</span><span class="p">,</span>
+        <span class="s2">&quot;y_pred_list&quot;</span><span class="p">:</span> <span class="n">y_pred_list</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Acumular resumen para tabla maestra</span>
+    <span class="n">metrics_rows_master</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">L</span><span class="p">,</span>
+        <span class="s2">&quot;MAPE_avg_mean&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MAPE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">&quot;MAPE_avg_std&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MAPE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s2">&quot;MAE_avg_mean&quot;</span><span class="p">:</span>  <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MAE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>  <span class="s2">&quot;MAE_avg_std&quot;</span><span class="p">:</span>  <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MAE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s2">&quot;MSE_avg_mean&quot;</span><span class="p">:</span>  <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MSE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>  <span class="s2">&quot;MSE_avg_std&quot;</span><span class="p">:</span>  <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;MSE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s2">&quot;RMSE_avg_mean&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;RMSE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">&quot;RMSE_avg_std&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;RMSE_avg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s2">&quot;BDS_pvalue_h1_mean&quot;</span><span class="p">:</span> <span class="n">df_metrics</span><span class="p">[</span><span class="s2">&quot;BDS_pvalue_h1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✔️ Sección 5 completada sin errores. (Guardado:&quot;</span><span class="p">,</span> <span class="n">SAVE_ARTIFACTS</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===== Usando 7 lags del precio → predecir |ret| futuros (h=1..7) =====
+Shapes -&gt; X: (2549, 7), Y: (2549, 7), D: 2549
+Folds: 5
+
+===== Usando 14 lags del precio → predecir |ret| futuros (h=1..7) =====
+Shapes -&gt; X: (2542, 14), Y: (2542, 7), D: 2542
+Folds: 5
+
+===== Usando 21 lags del precio → predecir |ret| futuros (h=1..7) =====
+Shapes -&gt; X: (2535, 21), Y: (2535, 7), D: 2535
+Folds: 5
+
+===== Usando 28 lags del precio → predecir |ret| futuros (h=1..7) =====
+Shapes -&gt; X: (2528, 28), Y: (2528, 7), D: 2528
+Folds: 5
+✔️ Sección 5 completada sin errores. (Guardado: True )
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_residual_diagnostics</span><span class="p">(</span><span class="n">y_list</span><span class="p">,</span> <span class="n">yhat_list</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">figs_dir</span><span class="o">=</span><span class="n">FIGS_DIR</span><span class="p">,</span> <span class="n">example_folds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lb_lags</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dibuja residuos (h=1) y sus ACF/ACF^2 para algunos folds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">yt</span><span class="p">,</span> <span class="n">yp</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">y_list</span><span class="p">,</span> <span class="n">yhat_list</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">example_folds</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">resid</span> <span class="o">=</span> <span class="n">yt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">yp</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Serie de residuos</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residuos de TEST (h=1) — Fold </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, L=</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">figs_dir</span><span class="si">}</span><span class="s2">/residuals_h1_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">_fold</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># ACF residuos</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">plot_acf</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="n">lb_lags</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ACF residuos (h=1) — Fold </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, L=</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">figs_dir</span><span class="si">}</span><span class="s2">/acf_resid_h1_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">_fold</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+        <span class="c1"># ACF residuos^2 (heterocedasticidad)</span>
+        <span class="n">fig2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">plot_acf</span><span class="p">(</span><span class="n">resid</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="n">lb_lags</span><span class="p">,</span> <span class="n">zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ACF residuos^2 (h=1) — Fold </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, L=</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">figs_dir</span><span class="si">}</span><span class="s2">/acf_resid2_h1_L</span><span class="si">{</span><span class="n">L</span><span class="si">}</span><span class="s2">_fold</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">140</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig2</span><span class="p">)</span>
+
+<span class="c1"># Generar algunos gráficos de diagnóstico (primer fold por L)</span>
+<span class="k">for</span> <span class="n">L</span> <span class="ow">in</span> <span class="n">lags_list</span><span class="p">:</span>
+    <span class="n">y_test_list</span> <span class="o">=</span> <span class="n">results_by_L</span><span class="p">[</span><span class="n">L</span><span class="p">][</span><span class="s2">&quot;y_test_list&quot;</span><span class="p">]</span>
+    <span class="n">y_pred_list</span> <span class="o">=</span> <span class="n">results_by_L</span><span class="p">[</span><span class="n">L</span><span class="p">][</span><span class="s2">&quot;y_pred_list&quot;</span><span class="p">]</span>
+    <span class="n">plot_residual_diagnostics</span><span class="p">(</span><span class="n">y_test_list</span><span class="p">,</span> <span class="n">y_pred_list</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">example_folds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✔️ Diagnóstico de residuos (gráficas) generado para el primer fold de cada L.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✔️ Diagnóstico de residuos (gráficas) generado para el primer fold de cada L.
+</pre></div>
+</div>
+<img alt="_images/4a18765e8571c707df87b4b2f15bc40b9e6843b911550c1c9fcdc265fe0f65f4.png" src="_images/4a18765e8571c707df87b4b2f15bc40b9e6843b911550c1c9fcdc265fe0f65f4.png" />
+<img alt="_images/ad7aabf5777f105992fce974819831a1b570d6b7d6ee026aa5897e41a973e4af.png" src="_images/ad7aabf5777f105992fce974819831a1b570d6b7d6ee026aa5897e41a973e4af.png" />
+<img alt="_images/03d1313a2a32c80689feca72af5fc0663140c8dffcb33be85e9c13f342991c6d.png" src="_images/03d1313a2a32c80689feca72af5fc0663140c8dffcb33be85e9c13f342991c6d.png" />
+<img alt="_images/9d5503d257bdd0b6debc59931bb70cf29151248d8197846b192ddcf257728aff.png" src="_images/9d5503d257bdd0b6debc59931bb70cf29151248d8197846b192ddcf257728aff.png" />
+<img alt="_images/01f8fa531281ba059444b00a226cbac4cc0f53b9b619026511c7f52ccf8ac990.png" src="_images/01f8fa531281ba059444b00a226cbac4cc0f53b9b619026511c7f52ccf8ac990.png" />
+<img alt="_images/e4f72a764162d8c773cdc44dc56727098470bd78d9c170a432c43efa70f60662.png" src="_images/e4f72a764162d8c773cdc44dc56727098470bd78d9c170a432c43efa70f60662.png" />
+<img alt="_images/bd976ad5ef5bd992905cb7da3b6695625dc0e2b55a568cc5cef3909b782bebd5.png" src="_images/bd976ad5ef5bd992905cb7da3b6695625dc0e2b55a568cc5cef3909b782bebd5.png" />
+<img alt="_images/0bd00c70aadf6cbe565ac528f07eee91062c697be5c1770be92bdd871308e913.png" src="_images/0bd00c70aadf6cbe565ac528f07eee91062c697be5c1770be92bdd871308e913.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_master</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metrics_rows_master</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">tabla_maestra</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;MAPE_avg (mean±std)&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fmt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MAPE_avg_mean&quot;</span><span class="p">],</span> <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MAPE_avg_std&quot;</span><span class="p">])],</span>
+    <span class="s2">&quot;MAE_avg  (mean±std)&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fmt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MAE_avg_mean&quot;</span><span class="p">],</span>  <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MAE_avg_std&quot;</span><span class="p">])],</span>
+    <span class="s2">&quot;MSE_avg  (mean±std)&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fmt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MSE_avg_mean&quot;</span><span class="p">],</span>  <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;MSE_avg_std&quot;</span><span class="p">])],</span>
+    <span class="s2">&quot;RMSE_avg (mean±std)&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fmt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;RMSE_avg_mean&quot;</span><span class="p">],</span> <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;RMSE_avg_std&quot;</span><span class="p">])],</span>
+    <span class="s2">&quot;BDS_pvalue_h1_mean&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df_master</span><span class="p">[</span><span class="s2">&quot;BDS_pvalue_h1_mean&quot;</span><span class="p">]]</span>
+<span class="p">})</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">tabla_maestra</span><span class="p">)</span>
+<span class="n">df_master</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">RESULTS_DIR</span><span class="si">}</span><span class="s2">/summary_by_L_raw.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">tabla_maestra</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">RESULTS_DIR</span><span class="si">}</span><span class="s2">/summary_by_L_formatted.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✔️ Tablas maestras guardadas en results/.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>L</th>
+      <th>MAPE_avg (mean±std)</th>
+      <th>MAE_avg  (mean±std)</th>
+      <th>MSE_avg  (mean±std)</th>
+      <th>RMSE_avg (mean±std)</th>
+      <th>BDS_pvalue_h1_mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7</td>
+      <td>12.201860 ± 5.049797</td>
+      <td>0.015903 ± 0.000913</td>
+      <td>0.000461 ± 0.000108</td>
+      <td>0.021338 ± 0.002406</td>
+      <td>nan</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14</td>
+      <td>13.418684 ± 6.239213</td>
+      <td>0.015630 ± 0.000893</td>
+      <td>0.000453 ± 0.000107</td>
+      <td>0.021148 ± 0.002373</td>
+      <td>nan</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21</td>
+      <td>12.413427 ± 5.820477</td>
+      <td>0.015545 ± 0.000546</td>
+      <td>0.000456 ± 0.000107</td>
+      <td>0.021240 ± 0.002368</td>
+      <td>nan</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>28</td>
+      <td>13.378462 ± 7.717606</td>
+      <td>0.015685 ± 0.000324</td>
+      <td>0.000454 ± 0.000075</td>
+      <td>0.021240 ± 0.001741</td>
+      <td>nan</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✔️ Tablas maestras guardadas en results/.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Prediccion de volatibilidad del BITCOIN usando series de tiempo</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptos-clave-en-series-financieras">Conceptos clave en series financieras</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos">1. Retornos logarítmicos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventajas-de-los-retornos-logaritmicos">✅ Ventajas de los retornos logarítmicos</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatilidad-historica">2. Volatilidad histórica</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eleccion-de-la-ventana">🔍 Elección de la ventana</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-descriptivo-inicial-de-btc">📊 Análisis descriptivo inicial de BTC</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#precio-de-cierre-close">1. Precio de cierre (Close)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos-logreturn">2. Retornos logarítmicos (LogReturn)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatilidad-30d-anualizada">3. Volatilidad 30d anualizada</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sintesis-general">📌 Síntesis general</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-graficos-exploratorios-de-btc">📊 Análisis de gráficos exploratorios de BTC</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serie-de-precios-close">1️⃣ Serie de precios (Close)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retornos-logaritmicos-diarios">2️⃣ Retornos logarítmicos diarios</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#histograma-de-retornos-logaritmicos">3️⃣ Histograma de retornos logarítmicos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-de-retornos-logreturn">4️⃣ ACF de retornos (LogReturn)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acf-de-retornos2-heterocedasticidad">5️⃣ ACF de retornos² (heterocedasticidad)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">📌 Síntesis general</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Nicolas Rodriguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
