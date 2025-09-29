@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  btc-volatility-api-alt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: btc-volatility-alt
+    
+    ports:
+      # Mapea el puerto 8001 del host al puerto 8000 del contenedor
+      - "8001:8000"
+      
+    volumes:
+      # Monta la carpeta local ./app/models en /app/app/models del contenedor (solo lectura)
+      - ./app/models:/app/app/models:ro
+      
+    environment:
+      - PYTHONPATH=app
+      - ENVIRONMENT=production
+      
+    command: uvicorn app.api_alternative:app --host 0.0.0.0 --port 8000
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      # *** SOLUCIÓN: Usar un script de Python para chequear el socket ***
+      test: [
+        "CMD-SHELL", 
+        "python -c 'import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.settimeout(1); s.connect((\"127.0.0.1\", 8000)); s.close()'"
+      ]
+      interval: 10s # Intervalo reducido para ver el resultado más rápido
+      timeout: 5s
+      retries: 5
+      
+    networks:
+      - btc-alt-network
+
+networks:
+  btc-alt-network:
+    driver: bridge
